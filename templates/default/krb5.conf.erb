@@ -1,13 +1,13 @@
 [libdefaults]
-	<% node[:krb5][:options].each do |r, c| -%>
+	<% node[:krb5][:options].sort.each do |r, c| -%>
 	<%= r %> = <%= c %>
 	<% end -%>
 
 [realms]
-	<% node[:krb5][:realms].each do |r, c| -%>
+	<% node[:krb5][:realms].sort.each do |r, c| -%>
 	<%= r %> = {
-	      	<% c.each do |opt, val| -%>
-		<% val.each do |i| -%>
+		<% c.sort.each do |opt, val| -%>
+			<% val.sort.each do |i| -%>
 		<%= opt -%> = <%= i %>
 		<% end -%>
 		<% end -%>
