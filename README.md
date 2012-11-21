@@ -1,7 +1,7 @@
 Description
 ===========
 
-Installs nfs 4 server/client
+Installs/configurates kerberos v5
 
 Requirements
 ============
