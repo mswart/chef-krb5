@@ -22,10 +22,9 @@
 package 'libkrb5-3'
 package 'krb5-config'
 
-template "/etc/krb5.conf" do
-  source "krb5.conf.erb"
+file "/etc/krb5.conf" do
   owner "root"
   group "root"
   mode 0644
-  not_if { node[:krb5][:options][:default_realm].empty? }
+  content node.generate_krb5_conf
 end

@@ -18,9 +18,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default[:krb5][:options] = {
-  :kdc_timesync => 1,
-  :ccache_type => 4,
-  :forwardable => true,
-  :proxiable => true
-}
+default['krb5']['libdefaults']['ccache_type'] = 4
+default['krb5']['libdefaults']['kdc_timesync'] = 1
+default['krb5']['libdefaults']['forwardable'] = true
+default['krb5']['libdefaults']['proxiable'] = true
+
+if node['domain'] && node['domain'].length > 0
+  realm = node['domain'].upcase
+  default['krb5']['libdefaults']['default_realm'] = realm
+  default['krb5']['realms'][realm]['kdc'] = 'kerberos.' + node['domain']
+  default['krb5']['realms'][realm]['admin_server'] = 'kerberos.' + node['domain']
+end
