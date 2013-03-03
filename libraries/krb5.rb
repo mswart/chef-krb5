@@ -19,25 +19,21 @@
 
 class Chef::Node
   def generate_krb5_conf
-    return nil if self['krb5'].nil?
-    lines = []
-    %w(libdefaults login appdefaults realms domain_realm logging capaths dbdefaults dbmodules plugins).each do |sectionname|
-      next unless self['krb5'].has_key?(sectionname) and not self['krb5'][sectionname].nil?
-      lines << '' if lines.length > 0
-      lines << "[#{sectionname}]"
-      generate_krb5_conf_section lines, self['krb5'][sectionname]
-    end
-    lines << ''
-    lines.join "\n"
+    generate_krb5_ini_file %w(libdefaults login appdefaults realms domain_realm logging capaths dbdefaults dbmodules plugins)
   end
 
   def generate_kdc_conf
+    generate_krb5_ini_file %w(kdcdefaults kdcrealms), 'kdcrealms' => 'realms'
+  end
+
+  private
+  def generate_krb5_ini_file(sections, sectionheadings={})
     return nil if self['krb5'].nil?
     lines = []
-    %w(kdcdefaults kdcrealms).each do |sectionname|
+    sections.each do |sectionname|
       next unless self['krb5'].has_key?(sectionname) and not self['krb5'][sectionname].nil?
       lines << '' if lines.length > 0
-      lines << "[#{sectionname}]".sub('kdcrealms', 'realms')
+      lines << "[#{sectionheadings.fetch(sectionname, sectionname)}]"
       generate_krb5_conf_section lines, self['krb5'][sectionname]
     end
     lines << ''
