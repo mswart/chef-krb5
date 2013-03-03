@@ -33,6 +33,30 @@ utils
 This cookbook installs the kerberos programs like `kinit`, `klist`.
 
 
+kdc
+---
+
+Basic kdc implementation: package installation, service and kdc.conf management.
+
+It is not designed to create a working kerberos REALM. Currently it is only
+tested in combination with kdc-ldap.
+
+kdc-ldap
+--------
+
+DB plugin for kdc and kadmind to store all kerberos information in LDAP.
+
+The sensitive information service key file and key stash file are not managed or
+created by chef.
+
+kadmind
+-------
+
+Setups a kadmind serverice. No configuration.
+
+
+
+
 Attributes
 ==========
 
@@ -80,4 +104,21 @@ to generate a subsection. All tags which have `nil` as value will be ignored. So
 previous setted options can be removed (e.g. in overwrite_attributes).
 
 Please read the `krb5.conf(5)` man page for more information about the syntax
+and a list about a supported options.
+
+
+kdc.conf
+--------
+
+The [kdc](#kdc) recipe managed the kdc.conf file. It has the same syntax like
+krb5.conf and the following sections:
+
+  * `node['krb5']['kdcdefaults']`: Contains parameters which control the overall
+     behaviour of the KDC.
+  * `node['krb5']['kdcrealms']`: Contains subsections keyed by Kerberos realm
+     names which describe per-realm KDC parameters. The section name inside the
+     file is only realm. To avoid collisions with the realms section of
+     krb5.conf another attribute name is used.
+
+Please read the `kdc.conf(5)` man page for more information about the syntax
 and a list about a supported options.

@@ -31,6 +31,19 @@ class Chef::Node
     lines.join "\n"
   end
 
+  def generate_kdc_conf
+    return nil if self['krb5'].nil?
+    lines = []
+    %w(kdcdefaults kdcrealms).each do |sectionname|
+      next unless self['krb5'].has_key?(sectionname) and not self['krb5'][sectionname].nil?
+      lines << '' if lines.length > 0
+      lines << "[#{sectionname}]".sub('kdcrealms', 'realms')
+      generate_krb5_conf_section lines, self['krb5'][sectionname]
+    end
+    lines << ''
+    lines.join "\n"
+  end
+
   def generate_krb5_conf_section(lines, data, prefix="\t")
     data.to_hash.sort.each do |tag, value_or_values|
       next if value_or_values.nil? # skip nil values -> support deleting a presetted value
