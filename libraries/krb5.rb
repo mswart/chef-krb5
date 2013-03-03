@@ -32,7 +32,7 @@ class Chef::Node
   end
 
   def generate_krb5_conf_section(lines, data, prefix="\t")
-    data.each do |tag, value_or_values|
+    data.to_hash.sort.each do |tag, value_or_values|
       next if value_or_values.nil? # skip nil values -> support deleting a presetted value
       (value_or_values.kind_of?(Array) ? value_or_values : [ value_or_values ]).each do |value|
         if value.kind_of? Hash # subsection
