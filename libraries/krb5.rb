@@ -31,7 +31,7 @@ class Chef::Node
     return nil if self['krb5'].nil?
     lines = []
     sections.each do |sectionname|
-      next unless self['krb5'].has_key?(sectionname) and not self['krb5'][sectionname].nil?
+      next if self['krb5'][sectionname].nil?
       lines << '' if lines.length > 0
       lines << "[#{sectionheadings.fetch(sectionname, sectionname)}]"
       generate_krb5_conf_section lines, self['krb5'][sectionname]
